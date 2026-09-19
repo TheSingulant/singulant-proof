@@ -86,5 +86,14 @@ def test_web_index_served() -> None:
     client = TestClient(create_app())
     response = client.get("/")
     assert response.status_code == 200
-    assert b"Attempt Falsification" in response.content
-    assert b"Powered by Nansen" in response.content
+    page = response.content
+    assert b"SINGULANT PROOF" in page
+    assert b"Adversarial on-chain verification" in page
+    assert b"Don't ask AI to confirm your thesis. Make it try to break it." in page
+    assert b"DETERMINISTIC ADJUDICATOR" in page
+    assert b"EVIDENCE RECEIPT" in page
+    assert b"Attempt Falsification" in page
+    assert b"Powered by Nansen" in page
+    assert b"The LLM cannot choose or override the verdict." in page
+    assert b"Synthetic docket" not in page
+    assert b"API base" not in page

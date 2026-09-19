@@ -3,7 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Singulant Proof — Attempt Falsification</title>
+    <title>Singulant Proof — Adversarial on-chain verification</title>
+    <meta
+      name="description"
+      content="Don't ask AI to confirm your thesis. Make it try to break it. Adversarial on-chain verification powered by Nansen. CLAIM → SUPPORT + CHALLENGE + QUALITY → DETERMINISTIC ADJUDICATOR → EVIDENCE RECEIPT."
+    />
+    <link rel="canonical" href="https://github.com/TheSingulant/singulant-proof" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,14 +20,33 @@
   <body>
     <div class="grain" aria-hidden="true"></div>
     <header class="masthead">
-      <div class="brand">
-        <span class="mark">SP</span>
-        <div>
-          <p class="product">Singulant Proof</p>
-          <p class="tagline">Don't ask AI to confirm your thesis. Make it try to break it.</p>
+      <div class="brand-row">
+        <div class="brand">
+          <span class="mark">SP</span>
+          <div>
+            <p class="product">SINGULANT PROOF</p>
+            <p class="lead">Adversarial on-chain verification</p>
+          </div>
         </div>
+        <p class="attribution">Powered by Nansen</p>
       </div>
-      <p class="attribution">Powered by Nansen</p>
+      <p class="tagline">Don't ask AI to confirm your thesis. Make it try to break it.</p>
+      <p class="secondary">Adversarial on-chain verification powered by Nansen.</p>
+      <p class="architecture" aria-label="Adversarial architecture">
+        <span>CLAIM</span>
+        <span class="arrow" aria-hidden="true">→</span>
+        <span class="parallel">
+          <span>SUPPORT CASE</span>
+          <span class="plus" aria-hidden="true">+</span>
+          <span>CHALLENGE CASE</span>
+          <span class="plus" aria-hidden="true">+</span>
+          <span>DATA QUALITY</span>
+        </span>
+        <span class="arrow" aria-hidden="true">→</span>
+        <span>DETERMINISTIC ADJUDICATOR</span>
+        <span class="arrow" aria-hidden="true">→</span>
+        <span>EVIDENCE RECEIPT</span>
+      </p>
     </header>
 
     <main>
@@ -52,9 +76,10 @@
           <button type="submit" id="cta">Attempt Falsification</button>
         </form>
         <p class="claim-lock">V1 claim only — Smart Money is accumulating this token.</p>
+        <p class="claim-lock">Default docket: AAVE. CONTRADICTED means Challenge won — we do not rubber-stamp.</p>
       </section>
 
-      <ol class="stages" id="stages" aria-label="Pipeline stages"></ol>
+      <ol class="stages" id="stages" aria-label="Hearing progress"></ol>
 
       <section class="claim-panel" id="claim-panel">
         <p class="kicker">Claim under cross-examination</p>
@@ -80,12 +105,13 @@
       </section>
 
       <section class="adjudication" id="adjudication">
-        <p class="kicker">Adjudication</p>
+        <p class="kicker">Deterministic adjudicator</p>
         <p class="verdict" id="verdict">—</p>
+        <p class="adjudicator-note">The LLM cannot choose or override the verdict.</p>
         <dl class="meters">
           <div><dt>Support</dt><dd id="m-support">—</dd></div>
           <div><dt>Challenge</dt><dd id="m-challenge">—</dd></div>
-          <div><dt>Quality</dt><dd id="m-quality">—</dd></div>
+          <div><dt>Data quality</dt><dd id="m-quality">—</dd></div>
         </dl>
         <p class="error" id="error" hidden></p>
       </section>
