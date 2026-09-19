@@ -42,10 +42,17 @@ footer {
 
 .masthead {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: stretch;
   padding: 1.6rem 0 1rem;
   border-bottom: 1px solid rgba(184, 137, 58, 0.35);
+}
+
+.brand-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
 }
 
 .brand {
@@ -68,24 +75,48 @@ footer {
   margin: 0;
   font-family: "Fraunces", serif;
   font-size: 1.4rem;
+  letter-spacing: 0.04em;
+}
+
+.lead {
+  margin: 0.15rem 0 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
 }
 
 .tagline,
+.secondary,
 .attribution,
 .hint,
 .claim-lock,
+.adjudicator-note,
 footer {
   color: var(--bone);
 }
 
 .tagline,
+.secondary,
 .attribution,
 .claim-lock,
 .hint,
 .kicker,
+.adjudicator-note,
 footer {
   margin: 0;
   letter-spacing: 0.03em;
+}
+
+.tagline {
+  margin-top: 0.85rem;
+  font-size: 1.02rem;
+}
+
+.secondary {
+  margin-top: 0.35rem;
+  font-size: 0.86rem;
 }
 
 .attribution {
@@ -103,7 +134,7 @@ footer {
 
 form {
   display: grid;
-  grid-template-columns: 140px 1fr 110px 1fr auto;
+  grid-template-columns: 140px 1fr 110px auto;
   gap: 0.7rem;
   align-items: end;
 }
@@ -134,11 +165,33 @@ select {
   color: var(--paper);
 }
 
-label.check {
-  flex-direction: row;
+.architecture {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  grid-column: 1 / 5;
-  text-transform: none;
+  gap: 0.45rem 0.55rem;
+  margin: 0.95rem 0 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--paper);
+}
+
+.architecture .arrow {
+  color: var(--gold);
+}
+
+.architecture .plus {
+  color: var(--rule);
+}
+
+.architecture .parallel {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.45rem;
+  padding: 0.28rem 0.5rem;
+  border: 1px solid rgba(184, 137, 58, 0.45);
 }
 
 button {
@@ -164,6 +217,16 @@ button:disabled {
   font-size: 0.8rem;
 }
 
+.claim-lock + .claim-lock {
+  margin-top: 0.25rem;
+}
+
+.adjudicator-note {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  color: #4c453a;
+}
+
 .stages {
   list-style: none;
   display: flex;
@@ -171,6 +234,10 @@ button:disabled {
   gap: 0.4rem;
   padding: 0;
   margin: 0 0 1.2rem;
+}
+
+.stages:empty {
+  display: none;
 }
 
 .stages li {
@@ -203,6 +270,15 @@ button:disabled {
 .bench {
   background: var(--paper);
   color: var(--ink);
+}
+
+.claim-panel .kicker,
+.adjudication .kicker {
+  color: var(--muted);
+}
+
+.receipt .hint {
+  color: var(--muted);
 }
 
 .claim-panel,

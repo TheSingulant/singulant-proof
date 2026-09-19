@@ -110,8 +110,6 @@ function resetDocket() {
   document.getElementById("claim-meta").textContent = "Awaiting docket.";
 }
 
-renderStages(null, [], false);
-
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   hideError();

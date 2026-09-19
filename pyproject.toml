@@ -24,7 +24,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/TheSingulant/singulant-proof"
+Homepage = "https://www.thesingulant.ai/proof/"
 
 [tool.setuptools.packages.find]
 where = ["src"]
