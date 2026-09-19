@@ -94,7 +94,7 @@ Live Nansen round-trip (skips unless the key is set):
 NANSEN_API_KEY=... pytest tests/test_integration_live.py -q
 ```
 
-A 1,000-call corpus is evaluation evidence, not this product. `scripts/nansen_eval.py` is a stub — do not run it here.
+A 7-surface Nansen stress corpus (1008 unique API calls) is evaluation evidence, not this product. See [Meridian evaluation](#meridian-evaluation). `scripts/nansen_eval.py` is a stub — do not run it here.
 
 ## What this is / is not
 
@@ -152,6 +152,21 @@ Nansen is the only provider. Credit and rate-limit headers are stored as redacte
 Auth: header `apikey`. Base: `https://api.nansen.ai`. Client retries **429 / timeout / 5xx** only, with bounded exponential backoff.
 
 Token screener (`/api/token-screener`) is a 404 — not used. V1 takes market-cap context from the netflow row.
+
+## Meridian evaluation
+
+Appendix — corpus coverage, not the product. Live demo: [https://www.thesingulant.ai/proof/](https://www.thesingulant.ai/proof/). Do not run the corpus from this repo (`scripts/nansen_eval.py` is a stub).
+
+External **7-surface** Nansen stress corpus: **1008 unique API calls** (not 1008 complete Proofs) — **907** success / **101** failed (mostly flows `422` unsupported label×token; 2× `500`).
+
+Production adjudicator still uses **only** `POST /api/v1/smart-money/netflow` and `POST /api/v1/tgm/flow-intelligence`. Other surfaces in that corpus are evaluation-only.
+
+Offline determinism: **PASS**.
+
+Live Proof coverage (examples):
+
+- Prior engineering: **AAVE → CONTRADICTED**, **WIF → MIXED**
+- Additional live: **AERO@base → SUPPORTED_BUT_CONTESTED**; **BONK → CONTRADICTED**; **JUP / RAY / WBNB → MIXED**
 
 ## Scoring
 
