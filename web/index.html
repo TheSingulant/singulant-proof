@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Singulant Proof — Attempt Falsification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="masthead">
+      <div class="brand">
+        <span class="mark">SP</span>
+        <div>
+          <p class="product">Singulant Proof</p>
+          <p class="tagline">Don't ask AI to confirm your thesis. Make it try to break it.</p>
+        </div>
+      </div>
+      <p class="attribution">Powered by Nansen</p>
+    </header>
+
+    <main>
+      <section class="docket-entry">
+        <form id="verify-form">
+          <label>
+            Chain
+            <input id="chain" name="chain" value="ethereum" autocomplete="off" required />
+          </label>
+          <label class="grow">
+            Token address
+            <input
+              id="token"
+              name="token"
+              value="0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9"
+              autocomplete="off"
+              required
+            />
+          </label>
+          <label>
+            TGM window
+            <select id="timeframe" name="timeframe">
+              <option value="1d" selected>1d</option>
+              <option value="7d">7d</option>
+            </select>
+          </label>
+          <label>
+            API base
+            <input id="api-base" name="apiBase" placeholder="same origin or http://127.0.0.1:8000" />
+          </label>
+          <label class="check">
+            <input id="demo" type="checkbox" />
+            Synthetic docket (no live Nansen call)
+          </label>
+          <button type="submit" id="cta">Attempt Falsification</button>
+        </form>
+        <p class="claim-lock">V1 claim only — Smart Money is accumulating this token.</p>
+      </section>
+
+      <ol class="stages" id="stages" aria-label="Pipeline stages"></ol>
+
+      <section class="claim-panel" id="claim-panel">
+        <p class="kicker">Claim under cross-examination</p>
+        <h1>Smart Money is accumulating this token.</h1>
+        <p class="meta" id="claim-meta">Awaiting docket.</p>
+      </section>
+
+      <section class="benches">
+        <article class="bench support" id="support-bench">
+          <header>
+            <h2>Support case</h2>
+            <p class="score" id="support-score">—</p>
+          </header>
+          <ol id="support-case"></ol>
+        </article>
+        <article class="bench challenge" id="challenge-bench">
+          <header>
+            <h2>Challenge case</h2>
+            <p class="score" id="challenge-score">—</p>
+          </header>
+          <ol id="challenge-case"></ol>
+        </article>
+      </section>
+
+      <section class="adjudication" id="adjudication">
+        <p class="kicker">Adjudication</p>
+        <p class="verdict" id="verdict">—</p>
+        <dl class="meters">
+          <div><dt>Support</dt><dd id="m-support">—</dd></div>
+          <div><dt>Challenge</dt><dd id="m-challenge">—</dd></div>
+          <div><dt>Quality</dt><dd id="m-quality">—</dd></div>
+        </dl>
+        <p class="error" id="error" hidden></p>
+      </section>
+
+      <section class="receipt" id="receipt">
+        <h2>Evidence receipt</h2>
+        <p class="hint">Share-card-ready fields. No social share UI in V1.</p>
+        <dl id="receipt-fields"></dl>
+        <ul class="warnings" id="warnings"></ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Meridian 2026 · Isolated Buildathon repo · No trading, wallet, or TX path</p>
+    </footer>
+    <script src="./app.js"></script>
+  </body>
+</html>

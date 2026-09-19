@@ -1,0 +1,369 @@
+:root {
+  --ink: #16120c;
+  --paper: #efe6d6;
+  --bone: #d8ccb4;
+  --rule: #b9aa8c;
+  --support: #2f5c4c;
+  --support-wash: #d9e6df;
+  --challenge: #8f2f28;
+  --challenge-wash: #f0d6d2;
+  --gold: #b8893a;
+  --muted: #6d6456;
+  --stamp: #7a1f1a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(1200px 700px at 20% -10%, #2a241c 0%, var(--ink) 55%);
+  color: var(--paper);
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.masthead,
+main,
+footer {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 1.6rem 0 1rem;
+  border-bottom: 1px solid rgba(184, 137, 58, 0.35);
+}
+
+.brand {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.mark {
+  width: 2.6rem;
+  height: 2.6rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--gold);
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+}
+
+.product {
+  margin: 0;
+  font-family: "Fraunces", serif;
+  font-size: 1.4rem;
+}
+
+.tagline,
+.attribution,
+.hint,
+.claim-lock,
+footer {
+  color: var(--bone);
+}
+
+.tagline,
+.attribution,
+.claim-lock,
+.hint,
+.kicker,
+footer {
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+.attribution {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.docket-entry {
+  margin: 1.4rem 0 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(239, 230, 214, 0.16);
+  background: rgba(239, 230, 214, 0.04);
+}
+
+form {
+  display: grid;
+  grid-template-columns: 140px 1fr 110px 1fr auto;
+  gap: 0.7rem;
+  align-items: end;
+}
+
+label,
+.kicker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+input,
+select {
+  height: 2.5rem;
+  padding: 0 0.65rem;
+  border: 1px solid var(--rule);
+  background: #221c15;
+  color: var(--paper);
+}
+
+label.check {
+  flex-direction: row;
+  align-items: center;
+  grid-column: 1 / 5;
+  text-transform: none;
+}
+
+button {
+  height: 2.5rem;
+  padding: 0 1rem;
+  border: 0;
+  background: var(--stamp);
+  color: var(--paper);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.claim-lock {
+  margin-top: 0.7rem;
+  font-size: 0.8rem;
+}
+
+.stages {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0 0 1.2rem;
+}
+
+.stages li {
+  padding: 0.28rem 0.5rem;
+  border: 1px solid rgba(184, 137, 58, 0.35);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.stages li.active {
+  color: var(--paper);
+  border-color: var(--gold);
+}
+
+.stages li.done {
+  color: #cfe6d8;
+  border-color: var(--support);
+}
+
+.stages li.fail {
+  color: #f0d6d2;
+  border-color: var(--challenge);
+}
+
+.claim-panel,
+.adjudication,
+.receipt,
+.bench {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.claim-panel,
+.adjudication,
+.receipt {
+  padding: 1.1rem 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.claim-panel h1,
+.verdict {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  margin: 0.2rem 0 0.4rem;
+}
+
+.claim-panel h1 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+.meta {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.benches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bench {
+  min-height: 16rem;
+}
+
+.bench header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.85rem 1rem 0.4rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.bench h2 {
+  margin: 0;
+  font-family: "Fraunces", serif;
+  font-size: 1.2rem;
+}
+
+.bench.support header {
+  background: var(--support-wash);
+}
+
+.bench.challenge header {
+  background: var(--challenge-wash);
+}
+
+.score {
+  margin: 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.1rem;
+}
+
+.bench ol {
+  margin: 0;
+  padding: 0.6rem 1rem 1rem 1.4rem;
+}
+
+.bench li {
+  margin: 0.55rem 0;
+}
+
+.bench li strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.bench li span {
+  display: block;
+  color: #4c453a;
+  font-size: 0.86rem;
+}
+
+.verdict {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+}
+
+.meters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin: 0.6rem 0 0;
+}
+
+.meters div {
+  border-top: 1px solid var(--rule);
+  padding-top: 0.4rem;
+}
+
+dt {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.3rem;
+  font-family: "Fraunces", serif;
+}
+
+.error {
+  color: var(--challenge);
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.receipt h2 {
+  margin: 0 0 0.2rem;
+  font-family: "Fraunces", serif;
+}
+
+#receipt-fields {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: 0.35rem 0.8rem;
+  margin: 0.8rem 0;
+  font-size: 0.88rem;
+}
+
+#receipt-fields dt {
+  color: var(--muted);
+}
+
+#receipt-fields dd {
+  font-size: 0.88rem;
+  font-family: "IBM Plex Mono", monospace;
+  overflow-wrap: anywhere;
+}
+
+.warnings {
+  padding-left: 1.1rem;
+  color: #5c4030;
+}
+
+footer {
+  padding: 1.4rem 0 2rem;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 900px) {
+  form,
+  .benches,
+  .meters,
+  #receipt-fields {
+    grid-template-columns: 1fr;
+  }
+
+  button {
+    justify-self: start;
+  }
+}
