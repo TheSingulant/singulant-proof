@@ -96,18 +96,28 @@ function hideError() {
   errorEl.textContent = "";
 }
 
+function resetDocket() {
+  clearList("support-case");
+  clearList("challenge-case");
+  document.getElementById("support-score").textContent = "—";
+  document.getElementById("challenge-score").textContent = "—";
+  document.getElementById("m-support").textContent = "—";
+  document.getElementById("m-challenge").textContent = "—";
+  document.getElementById("m-quality").textContent = "—";
+  document.getElementById("receipt-fields").innerHTML = "";
+  document.getElementById("warnings").innerHTML = "";
+  document.getElementById("claim-meta").textContent = "Awaiting docket.";
+}
+
 renderStages(null, [], false);
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   hideError();
   cta.disabled = true;
+  resetDocket();
   renderStages("CLAIM", [], false);
-  clearList("support-case");
-  clearList("challenge-case");
   document.getElementById("verdict").textContent = "Examining…";
-  document.getElementById("support-score").textContent = "—";
-  document.getElementById("challenge-score").textContent = "—";
 
   const payload = {
     chain: document.getElementById("chain").value.trim(),
