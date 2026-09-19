@@ -187,7 +187,11 @@ def evaluate_challenge(evidence: EvidenceSet) -> ChallengeResult:
         fresh_body = "Fresh-wallet netflow is null (expected outside 1d/7d, or not reported)."
     elif fresh > STRONG_USD:
         fresh_w, fresh_mat = 10, True
-        fresh_body = f"Fresh wallets show ${fresh:,.0f} net inflow — possible wash / farming pressure."
+        fresh_body = (
+            f"Fresh wallets show ${fresh:,.0f} net inflow. Concentrated fresh-wallet activity may "
+            "reduce confidence that the observed flow reflects broad conviction among established "
+            "wallets; it does not by itself establish wash trading or farming."
+        )
     elif fresh > MATERIAL_USD:
         fresh_w, fresh_mat = 6, True
         fresh_body = f"Fresh wallets show ${fresh:,.0f} net inflow."

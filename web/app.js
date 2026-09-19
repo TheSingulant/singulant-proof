@@ -80,8 +80,9 @@ function setReceipt(receipt) {
 }
 
 function apiBase() {
-  const raw = document.getElementById("api-base").value.trim();
-  if (raw) return raw.replace(/\/$/, "");
+  // Judge-facing UI: same-origin by default. Dev override via window.SINGULANT_PROOF_API_BASE only.
+  const configured = (window.SINGULANT_PROOF_API_BASE || "").trim().replace(/\/$/, "");
+  if (configured) return configured;
   if (window.location.protocol === "file:") return "http://127.0.0.1:8000";
   return "";
 }
@@ -124,7 +125,7 @@ form.addEventListener("submit", async (event) => {
     token_address: document.getElementById("token").value.trim(),
     claim: "SMART_MONEY_IS_ACCUMULATING_THIS_TOKEN",
     timeframe: document.getElementById("timeframe").value,
-    demo: document.getElementById("demo").checked,
+    demo: false,
   };
 
   try {
