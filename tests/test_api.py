@@ -1,7 +1,17 @@
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from singulant_proof.api.app import create_app
 from singulant_proof.proof.claim import CLAIM_ID
+
+PRODUCT_CANONICAL = "https://www.thesingulant.ai/proof/"
+PRODUCT_TITLE = "Singulant Proof | Adversarial On-Chain Verification"
+OG_DESCRIPTION = (
+    "Don't ask AI to confirm your thesis. Make it try to break it. "
+    "Singulant builds the case for and against an on-chain claim, then issues a "
+    "deterministic Evidence Receipt from live Nansen data."
+)
 
 
 def test_healthz() -> None:
@@ -112,5 +122,26 @@ def test_web_index_served() -> None:
     assert b"Attempt Falsification" in page
     assert b"Powered by Nansen" in page
     assert b"The LLM cannot choose or override the verdict." in page
+    assert PRODUCT_TITLE.encode() in page
+    assert f'href="{PRODUCT_CANONICAL}"'.encode() in page
+    assert b'property="og:title"' in page and PRODUCT_TITLE.encode() in page
+    assert b'property="og:url"' in page and PRODUCT_CANONICAL.encode() in page
+    assert b'property="og:type" content="website"' in page
+    assert OG_DESCRIPTION.encode() in page
+    assert b'name="twitter:card" content="summary"' in page
+    assert b'name="twitter:title"' in page
+    assert b'name="twitter:description"' in page
+    assert b"github.com/TheSingulant/singulant-proof" not in page
     assert b"Synthetic docket" not in page
     assert b"API base" not in page
+
+
+def test_readme_judge_path_is_same_origin() -> None:
+    readme = Path(__file__).resolve().parents[1].joinpath("README.md").read_text(encoding="utf-8")
+    assert PRODUCT_CANONICAL in readme
+    assert "127.0.0.1:8000" in readme
+    assert "Synthetic docket" not in readme
+    assert "API-base" not in readme
+    assert "API base" not in readme
+    assert "web/index.html" not in readme
+    assert "file://" not in readme
