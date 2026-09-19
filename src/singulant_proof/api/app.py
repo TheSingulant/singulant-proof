@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Literal
 
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -181,12 +180,8 @@ def create_app() -> FastAPI:
         description="Don't ask AI to confirm your thesis. Make it try to break it.",
         version=__version__,
     )
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    # CORS is owned by nginx in production. Do not add CORSMiddleware:
+    # allow_origins=["*"] stacked with nginx and browsers rejected duplicate ACAO.
 
     @app.get("/healthz", response_model=HealthResponse)
     def healthz() -> HealthResponse:

@@ -82,6 +82,23 @@ def test_rejects_unknown_claim() -> None:
     assert response.status_code == 422
 
 
+def test_app_does_not_emit_cors_headers() -> None:
+    """nginx owns CORS. Wildcard middleware stacked ACAO and broke browsers."""
+    client = TestClient(create_app())
+    for origin in ("https://www.thesingulant.ai", "https://evil.example"):
+        response = client.get("/healthz", headers={"Origin": origin})
+        assert response.status_code == 200
+        assert "access-control-allow-origin" not in response.headers
+    preflight = client.options(
+        "/v1/proof/verify",
+        headers={
+            "Origin": "https://www.thesingulant.ai",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+    assert "access-control-allow-origin" not in preflight.headers
+
+
 def test_web_index_served() -> None:
     client = TestClient(create_app())
     response = client.get("/")

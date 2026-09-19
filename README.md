@@ -76,7 +76,7 @@ curl -s http://127.0.0.1:8000/v1/proof/verify \
   }'
 ```
 
-Same-origin UI is served by the API. There is **no API-base field** and **no Synthetic docket checkbox**. Opening `web/index.html` as a file still calls `http://127.0.0.1:8000`.
+Same-origin UI is served by the API. There is **no API-base field** and **no Synthetic docket checkbox**. The app does not emit CORS headers (nginx owns them in production); use [http://127.0.0.1:8000](http://127.0.0.1:8000), not a `file://` page, for local runs.
 
 Without a key, live verify returns **503**. Optional env-only demo (API, not the UI): set `SINGULANT_PROOF_ALLOW_DEMO=1` and POST `{"demo": true}` — labeled synthetic evidence, not a Nansen observation.
 
