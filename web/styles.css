@@ -272,6 +272,15 @@ button:disabled {
   color: var(--ink);
 }
 
+.claim-panel .kicker,
+.adjudication .kicker {
+  color: var(--muted);
+}
+
+.receipt .hint {
+  color: var(--muted);
+}
+
 .claim-panel,
 .adjudication,
 .receipt {
