@@ -50,6 +50,46 @@ function addItems(listId, items) {
   }
 }
 
+function shortenAddress(address) {
+  const value = String(address || "").trim();
+  if (value.length <= 14) return value;
+  return `${value.slice(0, 6)}…${value.slice(-4)}`;
+}
+
+function tokenDisplay(token) {
+  if (!token) return "";
+  const symbol = String(token.symbol || "").trim();
+  if (symbol) return symbol;
+  const address = token.address || "";
+  return address ? shortenAddress(address) : "";
+}
+
+function setClaimMeta({ chain, token, synthetic }) {
+  const meta = document.getElementById("claim-meta");
+  meta.replaceChildren();
+
+  const parts = [];
+  if (chain) parts.push({ text: String(chain), emphasize: false });
+  const label = tokenDisplay(token);
+  if (label) parts.push({ text: label, emphasize: true });
+  parts.push({
+    text: synthetic ? "synthetic docket" : "live Nansen observations",
+    emphasize: false,
+  });
+
+  parts.forEach((part, index) => {
+    if (index > 0) meta.append(" · ");
+    if (part.emphasize) {
+      const span = document.createElement("span");
+      span.className = "token-emphasis";
+      span.textContent = part.text;
+      meta.append(span);
+    } else {
+      meta.append(part.text);
+    }
+  });
+}
+
 function setReceipt(receipt) {
   const dl = document.getElementById("receipt-fields");
   dl.innerHTML = "";
@@ -75,6 +115,7 @@ function setReceipt(receipt) {
     dt.textContent = key;
     const dd = document.createElement("dd");
     dd.textContent = value == null ? "—" : String(value);
+    if (key === "Token") dd.classList.add("token-emphasis");
     dl.append(dt, dd);
   }
 }
@@ -144,13 +185,11 @@ form.addEventListener("submit", async (event) => {
 
     const completed = body.stages_completed || STAGES;
     renderStages("RECEIPT", completed, false);
-    document.getElementById("claim-meta").textContent = [
-      body.chain,
-      body.token && (body.token.symbol || body.token.address),
-      body.synthetic ? "synthetic docket" : "live Nansen observations",
-    ]
-      .filter(Boolean)
-      .join(" · ");
+    setClaimMeta({
+      chain: body.chain,
+      token: body.token,
+      synthetic: body.synthetic,
+    });
     addItems("support-case", body.support_case);
     addItems("challenge-case", body.challenge_case);
     document.getElementById("support-score").textContent = body.support_strength;

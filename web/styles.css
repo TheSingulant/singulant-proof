@@ -320,6 +320,23 @@ button:disabled {
   margin: 0;
 }
 
+.claim-panel .meta {
+  line-height: 1.55;
+}
+
+.meta .token-emphasis {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+}
+
+#receipt-fields dd.token-emphasis {
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.03em;
+}
+
 .benches {
   display: grid;
   grid-template-columns: 1fr 1fr;
