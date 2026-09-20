@@ -180,8 +180,18 @@ function setReceipt(receipt) {
   root.replaceChildren();
   if (!receipt) return;
 
-  const decision = appendGroup(root, "Decision");
-  appendRow(decision.dl, "Claim", receipt.claim_display, "receipt-claim");
+  const head = document.createElement("header");
+  head.className = "receipt-head";
+
+  const claimBlock = document.createElement("div");
+  claimBlock.className = "receipt-claim-block";
+  const claimLabel = document.createElement("p");
+  claimLabel.className = "receipt-kicker";
+  claimLabel.textContent = "Claim";
+  const claimValue = document.createElement("p");
+  claimValue.className = "receipt-claim";
+  claimValue.textContent = displayValue(receipt.claim_display);
+  claimBlock.append(claimLabel, claimValue);
 
   const verdictBlock = document.createElement("div");
   verdictBlock.className = "receipt-verdict";
@@ -192,7 +202,7 @@ function setReceipt(receipt) {
   verdictValue.className = "receipt-verdict-stamp";
   verdictValue.textContent = displayValue(receipt.verdict);
   verdictBlock.append(verdictLabel, verdictValue);
-  decision.section.append(verdictBlock);
+  head.append(claimBlock, verdictBlock);
 
   const ledger = document.createElement("dl");
   ledger.className = "receipt-ledger";
@@ -211,23 +221,26 @@ function setReceipt(receipt) {
     wrap.append(dt, dd);
     ledger.append(wrap);
   }
-  decision.section.append(ledger);
 
-  const evidence = appendGroup(root, "Evidence");
+  const columns = document.createElement("div");
+  columns.className = "receipt-columns";
+  const evidence = appendGroup(columns, "Evidence");
   appendRow(evidence.dl, "Observed at", receipt.observed_at);
   appendRow(evidence.dl, "Observations", receipt.observation_count);
   appendRow(evidence.dl, "Support observations", receipt.support_observation_count);
   appendRow(evidence.dl, "Challenge observations", receipt.challenge_observation_count);
 
-  const provenance = appendGroup(root, "Provenance");
+  const provenance = appendGroup(columns, "Provenance");
   appendRow(provenance.dl, "Chain", receipt.chain, "receipt-secondary");
   appendRow(provenance.dl, "Token", receipt.token_symbol || receipt.token_address, "token-emphasis");
   if (receipt.tgm_timeframe) {
     appendRow(provenance.dl, "Timeframe", receipt.tgm_timeframe, "receipt-secondary");
   }
-  appendRow(provenance.dl, "Fingerprint", receipt.evidence_fingerprint, "receipt-mono-muted");
   appendRow(provenance.dl, "Receipt ID", receipt.receipt_id, "receipt-mono-muted");
+  appendRow(provenance.dl, "Fingerprint", receipt.evidence_fingerprint, "receipt-mono-muted");
   appendRow(provenance.dl, "Attribution", receipt.attribution);
+
+  root.append(head, ledger, columns);
 }
 
 function apiBase() {
