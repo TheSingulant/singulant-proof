@@ -67,14 +67,14 @@
         <form id="verify-form">
           <label>
             Chain
-            <input id="chain" name="chain" value="ethereum" autocomplete="off" required />
+            <input id="chain" name="chain" value="base" autocomplete="off" required />
           </label>
           <label class="grow">
             Token address
             <input
               id="token"
               name="token"
-              value="0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9"
+              value="0x940181a94A35A4569E4529A3CDfB74e38FD98631"
               autocomplete="off"
               required
             />
@@ -89,7 +89,7 @@
           <button type="submit" id="cta">Attempt Falsification</button>
         </form>
         <p class="claim-lock">V1 claim only — Smart Money is accumulating this token.</p>
-        <p class="claim-lock">Default docket: AAVE. CONTRADICTED means Challenge won — we do not rubber-stamp.</p>
+        <p class="claim-lock">CONTRADICTED means Challenge won. SUPPORTED_BUT_CONTESTED means both sides landed. We do not rubber-stamp.</p>
       </section>
 
       <ol class="stages" id="stages" aria-label="Hearing progress"></ol>
@@ -122,24 +122,26 @@
         <p class="verdict" id="verdict">—</p>
         <p class="adjudicator-note">The LLM cannot choose or override the verdict.</p>
         <dl class="meters">
-          <div><dt>Support</dt><dd id="m-support">—</dd></div>
-          <div><dt>Challenge</dt><dd id="m-challenge">—</dd></div>
-          <div><dt>Data quality</dt><dd id="m-quality">—</dd></div>
+          <div class="meter meter-support"><dt>Support</dt><dd id="m-support">—</dd></div>
+          <div class="meter meter-challenge"><dt>Challenge</dt><dd id="m-challenge">—</dd></div>
+          <div class="meter meter-quality"><dt>Data quality</dt><dd id="m-quality">—</dd></div>
         </dl>
         <p class="error" id="error" hidden></p>
       </section>
 
       <section class="receipt" id="receipt">
         <h2>Evidence receipt</h2>
-        <p class="hint">Share-card-ready fields. No social share UI in V1.</p>
+        <p class="hint">Auditable record of the evidence and adjudication.</p>
         <dl id="receipt-fields"></dl>
         <ul class="warnings" id="warnings"></ul>
+        <p class="receipt-attribution">Powered by Nansen</p>
       </section>
     </main>
 
     <footer>
-      <p>Meridian 2026 · Isolated Buildathon repo · No trading, wallet, or TX path</p>
+      <p>Built for Nansen Meridian 2026 · Live on-chain evidence · No trade execution</p>
     </footer>
+    <script src="./config.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

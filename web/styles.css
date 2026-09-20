@@ -3,13 +3,19 @@
   --paper: #efe6d6;
   --bone: #d8ccb4;
   --rule: #b9aa8c;
-  --support: #2f5c4c;
-  --support-wash: #d9e6df;
-  --challenge: #8f2f28;
-  --challenge-wash: #f0d6d2;
+  --support: #1f4f42;
+  --support-wash: #cfe3d8;
+  --support-edge: #2f7a64;
+  --support-body: #f4f8f5;
+  --challenge: #8a241c;
+  --challenge-wash: #edd0cb;
+  --challenge-edge: #b33a30;
+  --challenge-body: #f8f1ef;
   --gold: #b8893a;
   --muted: #6d6456;
   --stamp: #7a1f1a;
+  --receipt-rule: #8a7350;
+  --body-ink: #3f382e;
 }
 
 * {
@@ -119,10 +125,15 @@ footer {
   font-size: 0.86rem;
 }
 
-.attribution {
+.attribution,
+.receipt-attribution {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  border: 1px solid rgba(184, 137, 58, 0.55);
+  padding: 0.4rem 0.65rem;
 }
 
 .docket-entry {
@@ -284,8 +295,12 @@ button:disabled {
 .claim-panel,
 .adjudication,
 .receipt {
-  padding: 1.1rem 1.2rem;
-  margin-bottom: 1rem;
+  padding: 1.15rem 1.25rem;
+  margin-bottom: 1.05rem;
+}
+
+.claim-panel {
+  border-left: 3px solid var(--gold);
 }
 
 .claim-panel h1,
@@ -314,83 +329,156 @@ button:disabled {
 
 .bench {
   min-height: 16rem;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 0 rgba(22, 18, 12, 0.08);
+}
+
+.bench.support {
+  border-color: var(--support-edge);
+  border-left-width: 4px;
+  background: var(--support-body);
+}
+
+.bench.challenge {
+  border-color: var(--challenge-edge);
+  border-left-width: 4px;
+  background: var(--challenge-body);
 }
 
 .bench header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: 0.85rem 1rem 0.4rem;
+  padding: 0.85rem 1rem 0.5rem;
   border-bottom: 2px solid var(--ink);
 }
 
 .bench h2 {
   margin: 0;
   font-family: "Fraunces", serif;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
 }
 
 .bench.support header {
   background: var(--support-wash);
+  color: var(--support);
 }
 
 .bench.challenge header {
   background: var(--challenge-wash);
+  color: var(--challenge);
+}
+
+.bench.support h2,
+.bench.challenge h2 {
+  color: inherit;
 }
 
 .score {
   margin: 0;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 1.1rem;
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
 }
 
 .bench ol {
   margin: 0;
-  padding: 0.6rem 1rem 1rem 1.4rem;
+  padding: 0.7rem 1rem 1.05rem 1.45rem;
 }
 
 .bench li {
-  margin: 0.55rem 0;
+  margin: 0.65rem 0;
+  line-height: 1.35;
 }
 
 .bench li strong {
   display: block;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
+  color: var(--ink);
 }
 
 .bench li span {
   display: block;
-  color: #4c453a;
-  font-size: 0.86rem;
+  color: var(--body-ink);
+  font-size: 0.88rem;
+  margin-top: 0.15rem;
+}
+
+.adjudication {
+  border: 1px solid rgba(22, 18, 12, 0.18);
+  border-top: 3px solid var(--ink);
+  box-shadow: inset 0 0 0 1px rgba(184, 137, 58, 0.18);
 }
 
 .verdict {
-  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-size: clamp(2.05rem, 5.2vw, 3.15rem);
+  letter-spacing: 0.02em;
+  line-height: 1.08;
+  color: var(--stamp);
+  overflow-wrap: anywhere;
 }
 
 .meters {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
-  margin: 0.6rem 0 0;
+  gap: 0.9rem;
+  margin: 0.85rem 0 0;
 }
 
+.meters .meter,
 .meters div {
-  border-top: 1px solid var(--rule);
-  padding-top: 0.4rem;
+  border: 1px solid var(--rule);
+  background: rgba(255, 255, 255, 0.35);
+  padding: 0.55rem 0.65rem 0.6rem;
+}
+
+.meter-support,
+.meters div:nth-child(1) {
+  border-color: var(--support-edge);
+}
+
+.meter-challenge,
+.meters div:nth-child(2) {
+  border-color: var(--challenge-edge);
+}
+
+.meter-quality,
+.meters div:nth-child(3) {
+  border-color: var(--gold);
 }
 
 dt {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--muted);
 }
 
 dd {
-  margin: 0.15rem 0 0;
-  font-size: 1.3rem;
+  margin: 0.2rem 0 0;
+  font-size: 1.65rem;
   font-family: "Fraunces", serif;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+#m-support {
+  color: var(--support);
+}
+
+#m-challenge {
+  color: var(--challenge);
+}
+
+#m-quality {
+  color: #6a4e1c;
 }
 
 .error {
@@ -398,27 +486,87 @@ dd {
   font-family: "IBM Plex Mono", monospace;
 }
 
+.receipt {
+  border: 1px dashed var(--receipt-rule);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 10px,
+      rgba(138, 115, 80, 0.08) 10px,
+      rgba(138, 115, 80, 0.08) 11px
+    ),
+    linear-gradient(180deg, #f4ecdf 0%, var(--paper) 28%),
+    var(--paper);
+  box-shadow:
+    0 0 0 4px rgba(22, 18, 12, 0.04),
+    0 10px 24px rgba(22, 18, 12, 0.08);
+  position: relative;
+  padding-top: 1.35rem;
+}
+
+.receipt::before {
+  content: "TERMINAL ARTIFACT";
+  position: absolute;
+  top: 0.85rem;
+  right: 1rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--receipt-rule);
+}
+
 .receipt h2 {
-  margin: 0 0 0.2rem;
+  margin: 0 7.5rem 0.2rem 0;
   font-family: "Fraunces", serif;
+  font-size: 1.45rem;
+  letter-spacing: 0.02em;
 }
 
 #receipt-fields {
   display: grid;
   grid-template-columns: 14rem 1fr;
-  gap: 0.35rem 0.8rem;
-  margin: 0.8rem 0;
-  font-size: 0.88rem;
+  gap: 0.4rem 0.9rem;
+  margin: 0.95rem 0;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(138, 115, 80, 0.35);
+  padding-top: 0.75rem;
 }
 
 #receipt-fields dt {
   color: var(--muted);
+  font-weight: 500;
 }
 
 #receipt-fields dd {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-family: "IBM Plex Mono", monospace;
+  font-weight: 400;
   overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+#receipt-fields dt:nth-of-type(2),
+#receipt-fields dd:nth-of-type(2) {
+  color: var(--stamp);
+}
+
+#receipt-fields dd:nth-of-type(2) {
+  font-family: "Fraunces", serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+#receipt-fields dt:last-of-type,
+#receipt-fields dd:last-child {
+  color: #6a4e1c;
+}
+
+.receipt-attribution {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: #6a4e1c;
+  border-color: rgba(138, 115, 80, 0.55);
 }
 
 .warnings {
@@ -441,5 +589,19 @@ footer {
 
   button {
     justify-self: start;
+  }
+
+  .receipt::before {
+    position: static;
+    display: block;
+    margin-bottom: 0.45rem;
+  }
+
+  .receipt h2 {
+    margin-right: 0;
+  }
+
+  .verdict {
+    font-size: clamp(1.55rem, 8vw, 2.4rem);
   }
 }
