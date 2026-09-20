@@ -64,7 +64,7 @@ function tokenDisplay(token) {
   return address ? shortenAddress(address) : "";
 }
 
-function setClaimMeta({ chain, token, synthetic }) {
+function setClaimMeta({ chain, token, timeframe, synthetic }) {
   const meta = document.getElementById("claim-meta");
   meta.replaceChildren();
 
@@ -72,6 +72,7 @@ function setClaimMeta({ chain, token, synthetic }) {
   if (chain) parts.push({ text: String(chain), emphasize: false });
   const label = tokenDisplay(token);
   if (label) parts.push({ text: label, emphasize: true });
+  if (timeframe) parts.push({ text: String(timeframe), emphasize: false });
   parts.push({
     text: synthetic ? "synthetic docket" : "live Nansen observations",
     emphasize: false,
@@ -188,6 +189,7 @@ form.addEventListener("submit", async (event) => {
     setClaimMeta({
       chain: body.chain,
       token: body.token,
+      timeframe: body.timeframe || payload.timeframe,
       synthetic: body.synthetic,
     });
     addItems("support-case", body.support_case);
