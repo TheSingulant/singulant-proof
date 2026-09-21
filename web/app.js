@@ -134,32 +134,108 @@ function isFreshCountWarning(warning) {
   );
 }
 
-function setWarnings(rawWarnings) {
-  const root = document.getElementById("warnings");
-  root.replaceChildren();
-  const warnings = (rawWarnings || []).map((item) => String(item)).filter(Boolean);
-  if (warnings.length === 0) return;
-
-  const notes = [];
-  if (warnings.some(isExchangeCountWarning)) {
-    notes.push("Exchange wallet counts are unavailable for this observation.");
+// Pure Data Notes helpers — no DOM. Node-extractable (no JS harness in-repo).
+function formatCompactUsd(value) {
+  if (value == null || value === "") return null;
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return null;
+  const sign = n > 0 ? "+" : n < 0 ? "-" : "";
+  const abs = Math.abs(n);
+  const tiers = [
+    [1e12, "T"],
+    [1e9, "B"],
+    [1e6, "M"],
+    [1e3, "K"],
+  ];
+  for (let i = 0; i < tiers.length; i += 1) {
+    const [div, suffix] = tiers[i];
+    if (abs < div) continue;
+    let rounded = Math.round((abs / div) * 10) / 10;
+    let outSuffix = suffix;
+    if (rounded >= 1000 && i > 0) {
+      const [higherDiv, higherSuffix] = tiers[i - 1];
+      rounded = Math.round((abs / higherDiv) * 10) / 10;
+      outSuffix = higherSuffix;
+    }
+    const text = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+    return `${sign}$${text}${outSuffix}`;
   }
-  if (warnings.some(isFreshCountWarning)) {
-    notes.push("Fresh-wallet counts are unavailable for this observation.");
+  return `${sign}$${Math.round(abs)}`;
+}
+
+function parseUsdFromBody(body) {
+  const text = String(body || "");
+  const match = text.match(/(-)?\$(-)?([0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:\.(\d+))?/);
+  if (!match) return null;
+  const negative = Boolean(match[1] || match[2]);
+  const intPart = match[3].replace(/,/g, "");
+  const frac = match[4] || "";
+  const magnitude = Number(frac ? `${intPart}.${frac}` : intPart);
+  if (!Number.isFinite(magnitude)) return null;
+  return negative ? -magnitude : magnitude;
+}
+
+function collectCaseItems(verifyBody) {
+  const body = verifyBody || {};
+  return [].concat(body.challenge_case || [], body.support_case || []);
+}
+
+function extractNetUsd(cases, observationId) {
+  const items = Array.isArray(cases) ? cases : [];
+  for (const item of items) {
+    const ids = item && item.observation_ids;
+    if (!Array.isArray(ids) || !ids.includes(observationId)) continue;
+    const usd = parseUsdFromBody(item.body);
+    if (usd != null) return usd;
+  }
+  return null;
+}
+
+function buildDataNotes(rawWarnings, verifyBody) {
+  const warnings = (rawWarnings || []).map((item) => String(item)).filter(Boolean);
+  const cases = collectCaseItems(verifyBody);
+  const notes = [];
+  const exchangeWarned = warnings.some(isExchangeCountWarning);
+  const freshWarned = warnings.some(isFreshCountWarning);
+
+  if (exchangeWarned) {
+    const usd = extractNetUsd(cases, "tgm:exchange:net");
+    if (usd != null) notes.push(`Exchange net flow: ${formatCompactUsd(usd)}`);
+  }
+  if (freshWarned) {
+    const usd = extractNetUsd(cases, "tgm:fresh_wallets:net");
+    if (usd != null) notes.push(`Fresh-wallet net flow: ${formatCompactUsd(usd)}`);
+  }
+  const showedFreshNet = notes.some((note) => note.startsWith("Fresh-wallet net flow:"));
+  if (exchangeWarned || showedFreshNet) {
+    notes.push("Wallet count not tracked by this endpoint.");
   }
   for (const warning of warnings) {
     if (isExchangeCountWarning(warning) || isFreshCountWarning(warning)) continue;
     notes.push(warning);
   }
+  return notes;
+}
 
-  const heading = document.createElement("h3");
-  heading.textContent = "Data notes";
-  const list = document.createElement("ul");
-  list.className = "data-notes";
-  for (const note of notes) {
-    const li = document.createElement("li");
-    li.textContent = note;
-    list.append(li);
+function setWarnings(rawWarnings, verifyBody) {
+  const root = document.getElementById("warnings");
+  root.replaceChildren();
+  const warnings = (rawWarnings || []).map((item) => String(item)).filter(Boolean);
+  if (warnings.length === 0) return;
+
+  const notes = buildDataNotes(warnings, verifyBody);
+
+  if (notes.length) {
+    const heading = document.createElement("h3");
+    heading.textContent = "Data notes";
+    const list = document.createElement("ul");
+    list.className = "data-notes";
+    for (const note of notes) {
+      const li = document.createElement("li");
+      li.textContent = note;
+      list.append(li);
+    }
+    root.append(heading, list);
   }
 
   const details = document.createElement("details");
@@ -172,7 +248,7 @@ function setWarnings(rawWarnings) {
     tech.append(li);
   }
   details.append(summary, tech);
-  root.append(heading, list, details);
+  root.append(details);
 }
 
 function setReceipt(receipt) {
@@ -323,7 +399,7 @@ form.addEventListener("submit", async (event) => {
     document.getElementById("m-quality").textContent = body.data_quality;
     document.getElementById("verdict").textContent = body.verdict;
     setReceipt(body.evidence_receipt);
-    setWarnings(body.warnings);
+    setWarnings(body.warnings, body);
   } catch (err) {
     renderStages("COLLECT", ["CLAIM"], true);
     showError(err.message || "Network error talking to the local API.");
