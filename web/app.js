@@ -50,33 +50,197 @@ function addItems(listId, items) {
   }
 }
 
+function shortenAddress(address) {
+  const value = String(address || "").trim();
+  if (value.length <= 14) return value;
+  return `${value.slice(0, 6)}…${value.slice(-4)}`;
+}
+
+function tokenDisplay(token) {
+  if (!token) return "";
+  const symbol = String(token.symbol || "").trim();
+  if (symbol) return symbol;
+  const address = token.address || "";
+  return address ? shortenAddress(address) : "";
+}
+
+function setClaimMeta({ chain, token, timeframe, synthetic }) {
+  const meta = document.getElementById("claim-meta");
+  meta.replaceChildren();
+
+  const parts = [];
+  if (chain) parts.push({ text: String(chain), emphasize: false });
+  const label = tokenDisplay(token);
+  if (label) parts.push({ text: label, emphasize: true });
+  if (timeframe) parts.push({ text: String(timeframe), emphasize: false });
+  parts.push({
+    text: synthetic ? "synthetic docket" : "live Nansen observations",
+    emphasize: false,
+  });
+
+  parts.forEach((part, index) => {
+    if (index > 0) meta.append(" · ");
+    if (part.emphasize) {
+      const span = document.createElement("span");
+      span.className = "token-emphasis";
+      span.textContent = part.text;
+      meta.append(span);
+    } else {
+      meta.append(part.text);
+    }
+  });
+}
+
+function displayValue(value) {
+  return value == null || value === "" ? "—" : String(value);
+}
+
+function appendRow(dl, key, value, className) {
+  const dt = document.createElement("dt");
+  dt.textContent = key;
+  const dd = document.createElement("dd");
+  dd.textContent = displayValue(value);
+  if (className) dd.className = className;
+  dl.append(dt, dd);
+}
+
+function appendGroup(parent, title) {
+  const section = document.createElement("section");
+  section.className = "receipt-group";
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+  const dl = document.createElement("dl");
+  dl.className = "receipt-rows";
+  section.append(heading, dl);
+  parent.append(section);
+  return { section, dl };
+}
+
+function isExchangeCountWarning(warning) {
+  const text = String(warning);
+  return (
+    text === "TGM_EXCHANGE_WALLET_COUNT_ALWAYS_ZERO" ||
+    text === "TGM_PROVIDER:exchange_wallet_count is always 0 (not tracked), even when exchange net flow is non-zero." ||
+    (text.startsWith("TGM_PROVIDER:") && /exchange_wallet_count/i.test(text))
+  );
+}
+
+function isFreshCountWarning(warning) {
+  const text = String(warning);
+  return (
+    text === "TGM_FRESH_WALLET_COUNT_ALWAYS_ZERO" ||
+    text === "TGM_PROVIDER:fresh_wallets_wallet_count is always 0 (not tracked), even when fresh-wallet net flow is non-zero." ||
+    (text.startsWith("TGM_PROVIDER:") && /fresh_wallets_wallet_count/i.test(text))
+  );
+}
+
+function setWarnings(rawWarnings) {
+  const root = document.getElementById("warnings");
+  root.replaceChildren();
+  const warnings = (rawWarnings || []).map((item) => String(item)).filter(Boolean);
+  if (warnings.length === 0) return;
+
+  const notes = [];
+  if (warnings.some(isExchangeCountWarning)) {
+    notes.push("Exchange wallet counts are unavailable for this observation.");
+  }
+  if (warnings.some(isFreshCountWarning)) {
+    notes.push("Fresh-wallet counts are unavailable for this observation.");
+  }
+  for (const warning of warnings) {
+    if (isExchangeCountWarning(warning) || isFreshCountWarning(warning)) continue;
+    notes.push(warning);
+  }
+
+  const heading = document.createElement("h3");
+  heading.textContent = "Data notes";
+  const list = document.createElement("ul");
+  list.className = "data-notes";
+  for (const note of notes) {
+    const li = document.createElement("li");
+    li.textContent = note;
+    list.append(li);
+  }
+
+  const details = document.createElement("details");
+  const summary = document.createElement("summary");
+  summary.textContent = "Technical details";
+  const tech = document.createElement("ul");
+  for (const warning of warnings) {
+    const li = document.createElement("li");
+    li.textContent = warning;
+    tech.append(li);
+  }
+  details.append(summary, tech);
+  root.append(heading, list, details);
+}
+
 function setReceipt(receipt) {
-  const dl = document.getElementById("receipt-fields");
-  dl.innerHTML = "";
+  const root = document.getElementById("receipt-fields");
+  root.replaceChildren();
   if (!receipt) return;
-  const rows = [
-    ["Claim", receipt.claim_display],
-    ["Verdict", receipt.verdict],
-    ["Support", receipt.support_strength],
-    ["Challenge", receipt.challenge_strength],
-    ["Quality", receipt.data_quality],
-    ["Observed at", receipt.observed_at],
-    ["Observations", receipt.observation_count],
-    ["Support observations", receipt.support_observation_count],
-    ["Challenge observations", receipt.challenge_observation_count],
-    ["Chain", receipt.chain],
-    ["Token", receipt.token_symbol || receipt.token_address],
-    ["Fingerprint", receipt.evidence_fingerprint],
-    ["Receipt id", receipt.receipt_id],
-    ["Attribution", receipt.attribution],
+
+  const head = document.createElement("header");
+  head.className = "receipt-head";
+
+  const claimBlock = document.createElement("div");
+  claimBlock.className = "receipt-claim-block";
+  const claimLabel = document.createElement("p");
+  claimLabel.className = "receipt-kicker";
+  claimLabel.textContent = "Claim";
+  const claimValue = document.createElement("p");
+  claimValue.className = "receipt-claim";
+  claimValue.textContent = displayValue(receipt.claim_display);
+  claimBlock.append(claimLabel, claimValue);
+
+  const verdictBlock = document.createElement("div");
+  verdictBlock.className = "receipt-verdict";
+  const verdictLabel = document.createElement("p");
+  verdictLabel.className = "receipt-kicker";
+  verdictLabel.textContent = "Verdict";
+  const verdictValue = document.createElement("p");
+  verdictValue.className = "receipt-verdict-stamp";
+  verdictValue.textContent = displayValue(receipt.verdict);
+  verdictBlock.append(verdictLabel, verdictValue);
+  head.append(claimBlock, verdictBlock);
+
+  const ledger = document.createElement("dl");
+  ledger.className = "receipt-ledger";
+  const meterRows = [
+    ["Support", receipt.support_strength, "receipt-ledger-support"],
+    ["Challenge", receipt.challenge_strength, "receipt-ledger-challenge"],
+    ["Quality", receipt.data_quality, "receipt-ledger-quality"],
   ];
-  for (const [key, value] of rows) {
+  for (const [key, value, className] of meterRows) {
+    const wrap = document.createElement("div");
+    wrap.className = className;
     const dt = document.createElement("dt");
     dt.textContent = key;
     const dd = document.createElement("dd");
-    dd.textContent = value == null ? "—" : String(value);
-    dl.append(dt, dd);
+    dd.textContent = displayValue(value);
+    wrap.append(dt, dd);
+    ledger.append(wrap);
   }
+
+  const columns = document.createElement("div");
+  columns.className = "receipt-columns";
+  const evidence = appendGroup(columns, "Evidence");
+  appendRow(evidence.dl, "Observed at", receipt.observed_at);
+  appendRow(evidence.dl, "Observations", receipt.observation_count);
+  appendRow(evidence.dl, "Support observations", receipt.support_observation_count);
+  appendRow(evidence.dl, "Challenge observations", receipt.challenge_observation_count);
+
+  const provenance = appendGroup(columns, "Provenance");
+  appendRow(provenance.dl, "Chain", receipt.chain, "receipt-secondary");
+  appendRow(provenance.dl, "Token", receipt.token_symbol || receipt.token_address, "token-emphasis");
+  if (receipt.tgm_timeframe) {
+    appendRow(provenance.dl, "Timeframe", receipt.tgm_timeframe, "receipt-secondary");
+  }
+  appendRow(provenance.dl, "Receipt ID", receipt.receipt_id, "receipt-mono-muted");
+  appendRow(provenance.dl, "Fingerprint", receipt.evidence_fingerprint, "receipt-mono-muted");
+  appendRow(provenance.dl, "Attribution", receipt.attribution);
+
+  root.append(head, ledger, columns);
 }
 
 function apiBase() {
@@ -144,13 +308,12 @@ form.addEventListener("submit", async (event) => {
 
     const completed = body.stages_completed || STAGES;
     renderStages("RECEIPT", completed, false);
-    document.getElementById("claim-meta").textContent = [
-      body.chain,
-      body.token && (body.token.symbol || body.token.address),
-      body.synthetic ? "synthetic docket" : "live Nansen observations",
-    ]
-      .filter(Boolean)
-      .join(" · ");
+    setClaimMeta({
+      chain: body.chain,
+      token: body.token,
+      timeframe: body.timeframe || payload.timeframe,
+      synthetic: body.synthetic,
+    });
     addItems("support-case", body.support_case);
     addItems("challenge-case", body.challenge_case);
     document.getElementById("support-score").textContent = body.support_strength;
@@ -160,13 +323,7 @@ form.addEventListener("submit", async (event) => {
     document.getElementById("m-quality").textContent = body.data_quality;
     document.getElementById("verdict").textContent = body.verdict;
     setReceipt(body.evidence_receipt);
-    const warnings = document.getElementById("warnings");
-    warnings.innerHTML = "";
-    for (const warning of body.warnings || []) {
-      const li = document.createElement("li");
-      li.textContent = warning;
-      warnings.appendChild(li);
-    }
+    setWarnings(body.warnings);
   } catch (err) {
     renderStages("COLLECT", ["CLAIM"], true);
     showError(err.message || "Network error talking to the local API.");
