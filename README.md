@@ -6,6 +6,14 @@ Adversarial on-chain verification powered by Nansen.
 
 Live product: [https://www.thesingulant.ai/proof/](https://www.thesingulant.ai/proof/). This GitHub repository is source only.
 
+## Status
+
+- Singulant Proof is the evidence and adjudication layer of [The Singulant](https://www.thesingulant.ai/). It asks one question: **What does the evidence support?**
+- Public demo at [thesingulant.ai/proof](https://www.thesingulant.ai/proof/), built for the Meridian Buildathon 2026. Source version 0.1.0. No package or tagged release is published.
+- V1 evaluates a single claim type (Smart Money accumulation) using Nansen data.
+- It does not authorize transactions, establish identity, establish reputation, guarantee truth, or provide investment advice.
+- No formal security audit. See [SECURITY.md](SECURITY.md). License: MIT, see [LICENSE](LICENSE).
+
 Singulant Proof is an **adversarial verification system**. It is not a thesis checker. Meridian already has Thesis Desk — this is opposing counsel.
 
 ```
